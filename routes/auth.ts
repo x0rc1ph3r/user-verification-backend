@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken';
 import path from 'path';
 import User from '../models/User.js'
 import fetchuser from '../middleware/fetchuser.js';
+import { transferSplToken } from '../controllers/controller.js';
 
 // Set up Multer storage
 const storage = multer.diskStorage({
@@ -230,6 +231,10 @@ router.post("/updateprogress", fetchuser, async (req: any, res: any) => {
 
       if (!user) {
         return res.status(404).json({ success: false, message: "User not found" });
+      }
+
+      if (progress === 2) {
+        transferSplToken(user.wallet!);
       }
 
       user.progress = progress;
